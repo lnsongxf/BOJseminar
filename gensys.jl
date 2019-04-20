@@ -176,7 +176,7 @@ function gensys(F::GeneralizedSchur, c, Ψ, Π, div)
     else
 #         loose = veta1 - A_mul_Bc(veta, veta) * veta1
 #         loosesvd = svdfact!(loose)
-        loose = veta1 - veta'*veta * veta1
+        loose = veta1 - (veta*veta') * veta1
         loosesvd = svd(loose)
         nloose = sum(abs.(loosesvd.S) .> ϵ * n)
         unique = (nloose == 0)
@@ -185,7 +185,7 @@ function gensys(F::GeneralizedSchur, c, Ψ, Π, div)
     if unique
         eu[2] = 1
     else
-        warn("Indeterminacy: $(nloose) loose endogeneous error(s)")
+        @warn "Indeterminacy: $(nloose) loose endogeneous error(s)"
     end
 
     # tmat = hcat(eye(n - nunstab), -(ueta * (deta \ veta') * veta1 * A_mul_Bc(deta1, ueta1))')
